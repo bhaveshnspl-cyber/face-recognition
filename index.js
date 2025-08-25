@@ -11,7 +11,7 @@ app.get('/', (req, res) => {
 });
 
 app.get("/employees", (req, res) => {
-    const sql = "SELECT * FROM attendance_tracker.employees";
+    const sql = "SELECT * FROM employees";
     db.query(sql, (err, results) => {
         if (err) return res.status(500).json({ error: "Database error" });
         res.json(results);
@@ -19,68 +19,68 @@ app.get("/employees", (req, res) => {
 });
 
 // Assuming Express.js backend
-app.get('/attendance-report', async (req, res) => {
-    try {
-      const { startDate, endDate } = req.query;
+// app.get('/attendance-report', async (req, res) => {
+//     try {
+//       const { startDate, endDate } = req.query;
   
-      let sql = `
-        SELECT 
-          a.*, e.*
-        FROM 
-          attendance_tracker.attendance AS a
-        JOIN 
-          attendance_tracker.employees AS e ON a.e_id = e.id
-      `;
+//       let sql = `
+//         SELECT 
+//           a.*, e.*
+//         FROM 
+//           attendance_tracker.attendance AS a
+//         JOIN 
+//           attendance_tracker.employees AS e ON a.e_id = e.id
+//       `;
   
-      const values = [];
+//       const values = [];
   
-      if (startDate && endDate) {
-        // Use DATE() function to extract just the date part of the DATETIME column
-        sql += " WHERE DATE(a.date) BETWEEN ? AND ?";
-        values.push(startDate, endDate);
-      }
+//       if (startDate && endDate) {
+//         // Use DATE() function to extract just the date part of the DATETIME column
+//         sql += " WHERE DATE(a.date) BETWEEN ? AND ?";
+//         values.push(startDate, endDate);
+//       }
   
-      sql += " ORDER BY a.date DESC";
+//       sql += " ORDER BY a.date DESC";
   
-      db.query(sql, values, (err, results) => {
-        if (err) {
-          console.error("DB Error:", err);
-          return res.status(500).json({ error: "Database error" });
-        }
-        res.json(results);
-      });
-    } catch (error) {
-      console.error("Error fetching attendance report:", error);
-      res.status(500).json({ message: "Internal Server Error" });
-    }
-  });
+//       db.query(sql, values, (err, results) => {
+//         if (err) {
+//           console.error("DB Error:", err);
+//           return res.status(500).json({ error: "Database error" });
+//         }
+//         res.json(results);
+//       });
+//     } catch (error) {
+//       console.error("Error fetching attendance report:", error);
+//       res.status(500).json({ message: "Internal Server Error" });
+//     }
+//   });
   
 
 
 
 // Employee Registration with Face Embedding
-app.post("/register", async (req, res) => {
-  try {
-      const { e_name, e_phone, image_url, faceEmbedding } = req.body;
+// app.post("/register", async (req, res) => {
+//   try {
+//       const { e_name, e_phone, image_url, faceEmbedding } = req.body;
 
-      if (!Array.isArray(faceEmbedding)) {
-          return res.status(400).json({ error: "Invalid face embedding format" });
-      }
+//       if (!Array.isArray(faceEmbedding)) {
+//           return res.status(400).json({ error: "Invalid face embedding format" });
+//       }
 
-      const sql = "INSERT INTO attendance_tracker.employees (e_name, e_phone, image_url, face_embedding) VALUES (?, ?, ?, ?)";
-      db.query(sql, [e_name, e_phone, image_url, JSON.stringify(faceEmbedding)], (err, result) => {
-          if (err) {
-              console.error("Error inserting employee:", err);
-              res.status(500).json({ error: "Database error" });
-          } else {
-              res.status(200).json({ message: "Employee registered successfully!" });
-          }
-      });
-  } catch (error) {
-      console.error("Error:", error);
-      res.status(500).json({ error: "Invalid JSON format" });
-  }
-});
+//       const sql = "INSERT INTO attendance_tracker.employees (e_name, e_phone, image_url, face_embedding) VALUES (?, ?, ?, ?)";
+//       db.query(sql, [e_name, e_phone, image_url, JSON.stringify(faceEmbedding)], (err, result) => {
+//           if (err) {
+//               console.error("Error inserting employee:", err);
+//               res.status(500).json({ error: "Database error" });
+//           } else {
+//               res.status(200).json({ message: "Employee registered successfully!" });
+//           }
+//       });
+//   } catch (error) {
+//       console.error("Error:", error);
+//       res.status(500).json({ error: "Invalid JSON format" });
+//   }
+// });
 
 
 
@@ -96,7 +96,7 @@ app.post("/recognize", async (req, res) => {
           return res.status(400).json({ error: "Invalid face embedding format" });
       }
 
-      db.query("SELECT * FROM attendance_tracker.employees", (err, employees) => {
+      db.query("SELECT * FROM employees", (err, employees) => {
           if (err) {
               console.error("Database error:", err);
               return res.status(500).json({ error: "Database error" });
@@ -139,20 +139,20 @@ app.post("/recognize", async (req, res) => {
 
 
 // Mark Attendance
-app.post("/mark-attendance", (req, res) => {
-    const { employee_id } = req.body;
-    console.log(employee_id);
+// app.post("/mark-attendance", (req, res) => {
+//     const { employee_id } = req.body;
+//     console.log(employee_id);
     
 
-    if (!employee_id) return res.status(400).json({ error: "Employee ID is required" });
+//     if (!employee_id) return res.status(400).json({ error: "Employee ID is required" });
 
-    const sql = "INSERT INTO attendance_tracker.attendance (e_id, date) VALUES (?, NOW())";
-    db.query(sql, [employee_id], (err, result) => {
-        if (err) return res.status(500).json({ error: "Database error" });
+//     const sql = "INSERT INTO attendance_tracker.attendance (e_id, date) VALUES (?, NOW())";
+//     db.query(sql, [employee_id], (err, result) => {
+//         if (err) return res.status(500).json({ error: "Database error" });
 
-        res.json({ success: true, message: "Attendance marked" });
-    });
-});
+//         res.json({ success: true, message: "Attendance marked" });
+//     });
+// });
 
 app.listen(3001, () => {
     console.log(`http://localhost:3001`);
