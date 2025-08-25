@@ -16,7 +16,8 @@ app.get("/employees", (req, res) => {
         if (err) 
         {
             // return res.status(500).json({ error: "Database error" });
-            console.log("error is",err};
+            // console.log("error is",err};
+            return err;
         }
         
         res.json(results);
