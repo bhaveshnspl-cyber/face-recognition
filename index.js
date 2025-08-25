@@ -13,7 +13,12 @@ app.get('/', (req, res) => {
 app.get("/employees", (req, res) => {
     const sql = "SELECT * FROM employees";
     db.query(sql, (err, results) => {
-        if (err) return res.status(500).json({ error: "Database error" });
+        if (err) 
+        {
+            // return res.status(500).json({ error: "Database error" });
+            console.log("error is",err};
+        }
+        
         res.json(results);
     });
 });
