@@ -1,14 +1,11 @@
 const mysql = require('mysql2');
 
 const db = mysql.createConnection({
-    host: process.env.DB_HOST,
-      user: process.env.DB_USER,
-      password: process.env.DB_PASS,
-      database: process.env.DB_NAME,
-    connectTimeout: 20000,
-      waitForConnections: true,
-      connectionLimit: 10,
-      queueLimit: 0,
+  host: "152.56.68.143",
+  user: "nsplproj_nspl_clientusers",
+  port: 3306,
+  password: "nspl@hr_erp",
+  database: "nsplproj_hr_erp_client",
 });
 
 db.connect((err) => {
